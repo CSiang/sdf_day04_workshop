@@ -24,13 +24,18 @@ public class cookie {
 
         String readString;
 
-        try{
-        while((readString = br.readLine()) != null) {
+        
+        try{ while((readString = br.readLine()) != null) {
             cookieItems.add(readString);
-        }
-        } catch (IOException ex) {
+            } 
+            br.close();
+            } 
+        catch (IOException ex) {
             ex.printStackTrace();
-        }
+        } 
+        
+
+       
 
     }
 
