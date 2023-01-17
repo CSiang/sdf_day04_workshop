@@ -1,12 +1,15 @@
 package codes;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -49,29 +52,29 @@ public final class App {
             DataInputStream dis = new DataInputStream(bis);
             String msgReceived="";
 
+            try(OutputStream os = soc.getOutputStream()) {
+                BufferedOutputStream bos = new BufferedOutputStream(os);
+                DataOutputStream dos = new DataOutputStream(bos);
+
             while(!msgReceived.equals( "close")) {
                 msgReceived = dis.readUTF();
 
                 if(msgReceived.equalsIgnoreCase("get-cookie")) {
                     String cookieValue = cookie.returnCookie();
                     System.out.println(cookieValue);
+
+                    dos.writeUTF(cookieValue);
+                    dos.flush();
                 }
-
             }
+            dos.close();
+            bos.close();
+            os.close();
 
-        } catch (EOFException ex) {
+        }} catch (EOFException ex) {
+            System.out.println("Server shut down.");
             soc.close();
             serSoc.close();
         }
-
-        
-
-        
-
-
-
-
-
-
     }
 }
